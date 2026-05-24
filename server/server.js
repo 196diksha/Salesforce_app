@@ -7,10 +7,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const app = express()
-const port = process.env.PORT || 5000
-const clientUrl = process.env.CLIENT_URL || 'https://salesforce-app-k5jh.onrender.com/'
-const loginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com'
-const apiVersion = process.env.SF_API_VERSION || 'v60.0'
+const port = normalizeEnvValue(process.env.PORT) || 5000
+const clientUrl = normalizeUrl(process.env.CLIENT_URL || 'http://localhost:5173')
+const loginUrl = normalizeUrl(process.env.SF_LOGIN_URL || 'https://login.salesforce.com')
+const apiVersion = normalizeEnvValue(process.env.SF_API_VERSION) || 'v60.0'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const distDir = path.resolve(__dirname, '../dist')
 const sessions = new Map()
@@ -20,8 +20,23 @@ const oauthStateTtlMs = 10 * 60 * 1000
 app.use(cors({ origin: clientUrl, credentials: true }))
 app.use(express.json({ limit: '1mb' }))
 
+function normalizeEnvValue(value) {
+  return String(value || '')
+    .split('')
+    .filter((character) => {
+      const code = character.charCodeAt(0)
+      return code > 31 && code !== 127
+    })
+    .join('')
+    .trim()
+}
+
+function normalizeUrl(value) {
+  return normalizeEnvValue(value).replace(/\/+$/, '')
+}
+
 function requireEnv(name) {
-  const value = process.env[name]
+  const value = normalizeEnvValue(process.env[name])
   if (!value) {
     throw new Error(`${name} is required. Check .env.example and create .env.`)
   }
