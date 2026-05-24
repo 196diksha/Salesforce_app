@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 
 const app = express()
 const port = process.env.PORT || 5000
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173'
+const clientUrl = process.env.CLIENT_URL || 'https://salesforce-app-k5jh.onrender.com/'
 const loginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com'
 const apiVersion = process.env.SF_API_VERSION || 'v60.0'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -301,5 +301,5 @@ app.use((error, _req, res, _next) => {
 })
 
 app.listen(port, () => {
-  console.log(`Salesforce bridge API running on http://localhost:${port}`)
+  console.log(`Salesforce bridge API running on https://salesforce-app-k5jh.onrender.com:${port}`)
 })
