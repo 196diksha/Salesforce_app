@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: salesforce-validation-rule-switch
+    env: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: NODE_ENV=production npm start
+    envVars:
+      - key: SF_LOGIN_URL
+        value: https://login.salesforce.com
+      - key: SF_API_VERSION
+        value: v60.0
+      - key: SF_CLIENT_ID
+        sync: false
+      - key: SF_CLIENT_SECRET
+        sync: false
+      - key: SF_REDIRECT_URI
+        sync: false
+      - key: CLIENT_URL
+        sync: false
